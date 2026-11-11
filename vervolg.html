@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f1e7">
+    <meta name="description" content="De grote verjaardagsquiz voor Anna.">
+    <title>De grote Anna-quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --paper: #f6f1e7;
+        --ink: #203d35;
+        --muted: #64746b;
+        --coral: #c7553e;
+        --gold: #d3a452;
+        --line: rgba(32, 61, 53, 0.18);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        color: var(--ink);
+        background-color: var(--paper);
+        background-image: radial-gradient(rgba(32, 61, 53, 0.08) 0.65px, transparent 0.65px);
+        background-size: 7px 7px;
+        font-family: "DM Sans", sans-serif;
+      }
+
+      .page {
+        display: grid;
+        min-height: 100vh;
+        grid-template-rows: auto 1fr auto;
+        padding: 28px clamp(20px, 5vw, 72px) 20px;
+      }
+
+      .topline,
+      .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .topline {
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--line);
+        color: var(--coral);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .topline a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      main {
+        width: min(820px, 100%);
+        margin: 0 auto;
+        padding: clamp(48px, 9vh, 100px) 0;
+      }
+
+      .eyebrow {
+        margin: 0 0 22px;
+        color: var(--coral);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 600px;
+        margin: 0;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: clamp(46px, 6vw, 76px);
+        font-weight: 500;
+        line-height: 1.02;
+      }
+
+      .copy {
+        max-width: 450px;
+        margin: 28px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.7;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 30px;
+        padding: 12px 16px;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .back-link:hover {
+        border-color: var(--coral);
+        color: var(--coral);
+      }
+
+      .intro-copy {
+        max-width: 520px;
+        margin: 26px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.7;
+      }
+
+      .score-rule {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin: 34px 0 30px;
+        padding: 18px 0;
+        border-block: 1px solid var(--line);
+      }
+
+      .score-rule span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .score-rule strong {
+        color: var(--coral);
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 30px;
+        font-weight: 500;
+      }
+
+      .action-button {
+        display: inline-flex;
+        min-height: 50px;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 13px 20px;
+        border: 0;
+        color: var(--paper);
+        background: var(--ink);
+        cursor: pointer;
+        font: inherit;
+        font-size: 14px;
+        font-weight: 700;
+        transition: background-color 160ms ease, transform 160ms ease;
+      }
+
+      .action-button:hover {
+        background: var(--coral);
+        transform: translateY(-2px);
+      }
+
+      .action-button:focus-visible,
+      .answer-option:focus-visible,
+      .back-link:focus-visible {
+        outline: 3px solid var(--gold);
+        outline-offset: 3px;
+      }
+
+      .game-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 14px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .progress-track {
+        height: 4px;
+        margin-bottom: 36px;
+        overflow: hidden;
+        background: var(--line);
+      }
+
+      .progress-value {
+        width: 0;
+        height: 100%;
+        background: var(--coral);
+        transition: width 250ms ease;
+      }
+
+      .question {
+        max-width: 720px;
+        margin: 0 0 24px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 500;
+        line-height: 1.15;
+      }
+
+      .answers {
+        display: grid;
+        gap: 9px;
+      }
+
+      .answer-option {
+        display: flex;
+        min-height: 54px;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 16px;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.38);
+        cursor: pointer;
+        font: inherit;
+        text-align: left;
+        transition: border-color 150ms ease, background-color 150ms ease;
+      }
+
+      .answer-option:hover:not(:disabled) {
+        border-color: var(--coral);
+        background: rgba(199, 85, 62, 0.08);
+      }
+
+      .answer-option:disabled {
+        cursor: default;
+      }
+
+      .answer-option.is-correct {
+        border-color: var(--ink);
+        background: rgba(32, 61, 53, 0.1);
+      }
+
+      .answer-option.is-incorrect {
+        border-color: var(--coral);
+        background: rgba(199, 85, 62, 0.1);
+      }
+
+      .answer-letter {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        flex: 0 0 28px;
+        place-items: center;
+        border: 1px solid var(--line);
+        color: var(--coral);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .feedback {
+        min-height: 28px;
+        margin: 17px 0 6px;
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .province-question {
+        margin-top: 24px;
+      }
+
+      .map-instructions,
+      .map-loading,
+      .map-status {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .map-instructions {
+        margin: 0 0 14px;
+      }
+
+      #province-map {
+        display: block;
+        width: min(100%, 520px);
+        max-height: 560px;
+        margin: 0 auto;
+      }
+
+      #province-map .province-shape {
+        fill: #dfe7df;
+        stroke: var(--ink);
+        stroke-width: 2.5px;
+        vector-effect: non-scaling-stroke;
+        cursor: pointer;
+        transition: fill 140ms ease;
+      }
+
+      #province-map .province-shape:hover,
+      #province-map .province-shape:focus {
+        fill: #efcf98;
+        outline: none;
+      }
+
+      #province-map .province-shape.is-selected {
+        fill: var(--gold);
+      }
+
+      #province-map .province-shape.is-correct {
+        fill: #88a68e;
+      }
+
+      #province-map .province-shape.is-incorrect {
+        fill: #df9b86;
+      }
+
+      #province-map .province-label {
+        fill: var(--ink);
+        font-family: "DM Sans", sans-serif;
+        font-size: 33px;
+        font-weight: 700;
+        paint-order: stroke;
+        pointer-events: none;
+        stroke: var(--paper);
+        stroke-linejoin: round;
+        stroke-width: 7px;
+      }
+
+      .map-credit {
+        margin: 10px 0 14px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .province-fallback {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 8px;
+        margin: 18px 0;
+      }
+
+      .province-fallback-option {
+        min-height: 46px;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        background: transparent;
+        cursor: pointer;
+        font: inherit;
+        text-align: left;
+      }
+
+      .province-fallback-option[aria-pressed="true"] {
+        border-color: var(--ink);
+        background: rgba(32, 61, 53, 0.1);
+      }
+
+      .text-answer {
+        display: grid;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .text-answer label {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .text-answer textarea {
+        width: 100%;
+        min-height: 130px;
+        resize: vertical;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: 0;
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.5);
+        font: inherit;
+        line-height: 1.6;
+      }
+
+      .text-answer textarea:focus-visible {
+        outline: 3px solid var(--gold);
+        outline-offset: 2px;
+      }
+
+      .gift-reveal {
+        display: flex;
+        min-height: 390px;
+        flex-direction: column;
+        justify-content: center;
+        margin: 38px 0 30px;
+        padding: clamp(32px, 7vw, 72px);
+        border-top: 4px solid var(--gold);
+        color: var(--paper);
+        background-color: var(--ink);
+        background-image: repeating-linear-gradient(165deg, transparent 0 27px, rgba(246, 241, 231, 0.04) 28px 29px);
+      }
+
+      .gift-reveal .eyebrow {
+        margin-bottom: 18px;
+        color: #e8c77d;
+      }
+
+      .gift-reveal .reveal-intro {
+        max-width: 660px;
+        margin: 0 0 18px;
+        color: rgba(246, 241, 231, 0.82);
+        font-size: clamp(17px, 2vw, 21px);
+        line-height: 1.6;
+      }
+
+      .gift-reveal h2 {
+        max-width: 760px;
+        margin: 0;
+        color: var(--paper);
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: clamp(40px, 6vw, 68px);
+        font-weight: 500;
+        line-height: 1.05;
+      }
+
+      .gift-reveal .gift-date {
+        margin: 24px 0 0;
+        color: #e8c77d;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .gift-reveal .gift-copy {
+        max-width: 580px;
+        margin: 16px 0 0;
+        color: rgba(246, 241, 231, 0.82);
+        font-size: 19px;
+        line-height: 1.75;
+      }
+
+      .gift-signoff {
+        max-width: 580px;
+        margin: 20px 0 0;
+        color: #f4dca1;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .venue-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(246, 241, 231, 0.65);
+        color: var(--paper);
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .venue-link:hover {
+        color: #e8c77d;
+      }
+
+      .footer {
+        padding-top: 17px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      @media (max-width: 720px) {
+        .page {
+          padding: 20px 22px 16px;
+        }
+
+        main {
+          max-width: 500px;
+          padding: 56px 0 64px;
+        }
+
+        .score-rule {
+          align-items: flex-start;
+        }
+
+        .game-heading {
+          font-size: 10px;
+        }
+
+        .gift-reveal {
+          min-height: 350px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="topline">
+        <span>Anna's verjaardagsspecial</span>
+        <a href="index.html">Terug naar je brief</a>
+      </header>
+
+      <main>
+        <section id="intro-screen" aria-labelledby="quiz-title">
+          <p class="eyebrow">Speciale aflevering · 24</p>
+          <h1 id="quiz-title">De grote Anna-quiz</h1>
+          <p class="intro-copy">Vijf vragen. Behaal de minimumscore en ontdek je cadeau.</p>
+          <div class="score-rule">
+            <span>Benodigde score</span>
+            <strong>4 <span>van de 5</span></strong>
+          </div>
+          <button class="action-button" id="start-button" type="button">
+            Start de quiz <span aria-hidden="true">&rarr;</span>
+          </button>
+        </section>
+
+        <section id="question-screen" aria-labelledby="question-text" hidden>
+          <div class="game-heading">
+            <span id="question-number">Vraag 1 van 5</span>
+            <span id="score-display">Goed: 0</span>
+          </div>
+          <div class="progress-track" role="progressbar" aria-label="Quizvoortgang" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0">
+            <div class="progress-value" id="progress-value"></div>
+          </div>
+          <h2 class="question" id="question-text"></h2>
+          <div class="answers" id="answers"></div>
+          <div class="province-question" id="province-question" hidden>
+            <p class="map-instructions">Selecteer de twee provincies waar we samen een weekend weg zijn geweest.</p>
+            <p class="map-loading" id="map-loading" aria-live="polite">De kaart wordt geladen…</p>
+            <svg id="province-map" role="group" aria-label="Kaart van de twaalf Nederlandse provincies" hidden></svg>
+            <div class="province-fallback" id="province-fallback" hidden></div>
+            <p class="map-status" id="map-status" aria-live="polite">Nog geen provincies geselecteerd.</p>
+            <p class="map-credit">Kaartgrenzen: geoBoundaries / Nationaal Georegister, CC0 1.0.</p>
+            <button class="action-button" id="map-submit-button" type="button" hidden>Controleer selectie</button>
+          </div>
+          <form class="text-answer" id="text-answer-form" hidden>
+            <label for="favorite-moment">Schrijf hieronder jouw favoriete moment van het afgelopen jaar.</label>
+            <textarea id="favorite-moment" maxlength="600" placeholder="Mijn favoriete moment was…"></textarea>
+            <button class="action-button" type="submit">Verder</button>
+          </form>
+          <p class="feedback" id="feedback" aria-live="polite"></p>
+          <button class="action-button" id="next-button" type="button" hidden>Volgende vraag</button>
+        </section>
+
+        <section id="result-screen" aria-labelledby="result-title" aria-live="polite" hidden>
+          <p class="eyebrow">Eindscore</p>
+          <h1 id="result-title"></h1>
+          <p class="intro-copy" id="result-copy"></p>
+          <div class="gift-reveal" id="gift-reveal" hidden>
+            <p class="eyebrow">Een cadeau voor jou</p>
+            <p class="reveal-intro">Tijd om jouw cadeau te ontdekken:</p>
+            <h2>Een dagje samen ontspannen</h2>
+            <p class="gift-date"><time datetime="2026-12-16">16 december</time> · Thermen Bad Nieuweschans</p>
+            <p class="gift-copy">Een hele dag samen ontspannen, genieten van de sauna’s en even alle tijd voor ons tweeën.</p>
+            <p class="gift-copy" style="margin-top: 18px;">
+              Lieve Anna,<br><br>
+              In je verdiende vakantie gaan we samen naar Bad Nieuweschans om heerlijk tot rust te komen.
+            </p>
+            <p class="gift-signoff">Met liefde, Mircko</p>
+            <a class="venue-link" href="https://www.thermenbadnieuweschans.nl/" target="_blank" rel="noreferrer">
+              Bekijk Thermen Bad Nieuweschans <span aria-hidden="true">&nearr;</span>
+            </a>
+          </div>
+          <button class="action-button" id="retry-button" type="button">Speel opnieuw</button>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>Met liefde gemaakt, speciaal voor jou</span>
+        <span>Anna · 24</span>
+      </footer>
+    </div>
+    <script>
+      const questions = [
+        {
+          type: "choice",
+          text: "Op 2 december kregen we de sleutel van ons nieuwe huisje. Op welke datum zijn we verhuisd?",
+          answers: ["26 december", "27 december", "28 december", "29 december"],
+          correct: 1
+        },
+        {
+          type: "map",
+          text: "In welke provincies zijn we afgelopen jaar samen een weekend weg geweest?",
+          correct: ["Zeeland", "Fryslân"]
+        },
+        {
+          type: "choice",
+          text: "Op Mallorca ontdekte je een nieuw favoriet drankje. Naar welke stad is het vernoemd?",
+          answers: ["Valencia", "New York", "Moskou", "San Francisco"],
+          correct: 3
+        },
+        {
+          type: "choice",
+          text: "Wat was het eerste wat we in ons nieuwe huis hebben gedaan?",
+          answers: ["De muren verven", "De vloer leggen", "De woonkamer inrichten"],
+          correct: 0
+        },
+        {
+          type: "text",
+          text: "Wat was je favoriete moment dit jaar?"
+        }
+      ];
+      const minimumCorrect = 4;
+      const provinceNames = ["Groningen", "Drenthe", "Fryslân", "Overijssel", "Flevoland", "Gelderland", "Utrecht", "Noord-Holland", "Zuid-Holland", "Zeeland", "Noord-Brabant", "Limburg"];
+      const correctProvinces = new Set(["Zeeland", "Fryslân"]);
+      const provinceDataUrl = "https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/NLD/ADM1/geoBoundaries-NLD-ADM1.geojson";
+      let questionIndex = 0;
+      let correctCount = 0;
+      let selectedProvinces = new Set();
+      let provinceMapPromise;
+
+      const introScreen = document.getElementById("intro-screen");
+      const questionScreen = document.getElementById("question-screen");
+      const resultScreen = document.getElementById("result-screen");
+      const questionNumber = document.getElementById("question-number");
+      const scoreDisplay = document.getElementById("score-display");
+      const questionText = document.getElementById("question-text");
+      const answersElement = document.getElementById("answers");
+      const feedback = document.getElementById("feedback");
+      const nextButton = document.getElementById("next-button");
+      const progressTrack = document.querySelector(".progress-track");
+      const progressValue = document.getElementById("progress-value");
+      const provinceQuestion = document.getElementById("province-question");
+      const provinceMap = document.getElementById("province-map");
+      const mapLoading = document.getElementById("map-loading");
+      const mapFallback = document.getElementById("province-fallback");
+      const mapStatus = document.getElementById("map-status");
+      const mapSubmitButton = document.getElementById("map-submit-button");
+      const textAnswerForm = document.getElementById("text-answer-form");
+      const favoriteMoment = document.getElementById("favorite-moment");
+
+      function showQuestion() {
+        const question = questions[questionIndex];
+        questionNumber.textContent = `Vraag ${questionIndex + 1} van ${questions.length}`;
+        scoreDisplay.textContent = `Goed: ${correctCount}`;
+        questionText.textContent = question.text;
+        feedback.textContent = "";
+        nextButton.hidden = true;
+        nextButton.textContent = questionIndex === questions.length - 1 ? "Bekijk je score" : "Volgende vraag";
+        progressTrack.setAttribute("aria-valuenow", String(questionIndex));
+        progressValue.style.width = `${(questionIndex / questions.length) * 100}%`;
+        answersElement.replaceChildren();
+        answersElement.hidden = question.type !== "choice";
+        provinceQuestion.hidden = question.type !== "map";
+        textAnswerForm.hidden = question.type !== "text";
+        favoriteMoment.value = "";
+        favoriteMoment.disabled = false;
+        textAnswerForm.querySelector("button").disabled = false;
+
+        if (question.type === "choice") {
+          question.answers.forEach((answer, answerIndex) => {
+            const button = document.createElement("button");
+            const letter = document.createElement("span");
+            const label = document.createElement("span");
+            button.className = "answer-option";
+            button.type = "button";
+            letter.className = "answer-letter";
+            letter.textContent = String.fromCharCode(65 + answerIndex);
+            label.textContent = answer;
+            button.append(letter, label);
+            button.addEventListener("click", () => chooseAnswer(answerIndex));
+            answersElement.append(button);
+          });
+        } else if (question.type === "map") {
+          prepareProvinceQuestion();
+        }
+      }
+
+      function chooseAnswer(selectedIndex) {
+        const question = questions[questionIndex];
+        const answerButtons = answersElement.querySelectorAll("button");
+        answerButtons.forEach((button, index) => {
+          button.disabled = true;
+          if (index === question.correct) button.classList.add("is-correct");
+          if (index === selectedIndex && index !== question.correct) button.classList.add("is-incorrect");
+        });
+
+        const isCorrect = selectedIndex === question.correct;
+        const correctAnswer = question.answers[question.correct];
+        completeQuestion(isCorrect, isCorrect ? "Helemaal goed!" : `Helaas, het juiste antwoord was ${correctAnswer}.`);
+      }
+
+      function completeQuestion(isCorrect, message) {
+        if (isCorrect) correctCount += 1;
+        feedback.textContent = message;
+        scoreDisplay.textContent = `Goed: ${correctCount}`;
+        progressTrack.setAttribute("aria-valuenow", String(questionIndex + 1));
+        progressValue.style.width = `${((questionIndex + 1) / questions.length) * 100}%`;
+        nextButton.hidden = false;
+      }
+
+      function projectCoordinate([longitude, latitude]) {
+        return [(longitude - 3) * 0.61 * 650, (53.7 - latitude) * 650];
+      }
+
+      function simplifyLine(points, tolerance = 8) {
+        if (points.length <= 2) return points;
+        const retained = new Uint8Array(points.length);
+        retained[0] = 1;
+        retained[points.length - 1] = 1;
+        const stack = [[0, points.length - 1]];
+        const toleranceSquared = tolerance * tolerance;
+
+        while (stack.length) {
+          const [start, end] = stack.pop();
+          const [startX, startY] = points[start];
+          const [endX, endY] = points[end];
+          const deltaX = endX - startX;
+          const deltaY = endY - startY;
+          const lengthSquared = deltaX * deltaX + deltaY * deltaY;
+          let maximumDistance = toleranceSquared;
+          let furthestIndex = -1;
+
+          for (let index = start + 1; index < end; index += 1) {
+            const [x, y] = points[index];
+            const projection = lengthSquared
+              ? Math.max(0, Math.min(1, ((x - startX) * deltaX + (y - startY) * deltaY) / lengthSquared))
+              : 0;
+            const distance = (x - (startX + projection * deltaX)) ** 2 + (y - (startY + projection * deltaY)) ** 2;
+            if (distance > maximumDistance) {
+              maximumDistance = distance;
+              furthestIndex = index;
+            }
+          }
+
+          if (furthestIndex !== -1) {
+            retained[furthestIndex] = 1;
+            stack.push([start, furthestIndex], [furthestIndex, end]);
+          }
+        }
+
+        return points.filter((_, index) => retained[index]);
+      }
+
+      function renderProvinceMap(geoJson) {
+        const svgNamespace = "http://www.w3.org/2000/svg";
+        const features = geoJson.features.map(feature => {
+          const polygons = feature.geometry.type === "Polygon" ? [feature.geometry.coordinates] : feature.geometry.coordinates;
+          let minX = Infinity;
+          let minY = Infinity;
+          let maxX = -Infinity;
+          let maxY = -Infinity;
+          const labelPoints = [];
+          const pathData = polygons.flatMap(polygon => polygon.map((ring, ringIndex) => {
+            const points = ring.map(projectCoordinate);
+            for (const [x, y] of points) {
+              minX = Math.min(minX, x);
+              minY = Math.min(minY, y);
+              maxX = Math.max(maxX, x);
+              maxY = Math.max(maxY, y);
+            }
+            if (ringIndex === 0) labelPoints.push(...points);
+            return simplifyLine(points).map(([x, y], index) => `${index ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`).join("") + "Z";
+          })).join("");
+          const labelPosition = labelPoints.reduce((center, point) => [center[0] + point[0] / labelPoints.length, center[1] + point[1] / labelPoints.length], [0, 0]);
+          return { name: feature.properties.shapeName, pathData, minX, minY, maxX, maxY, labelPosition };
+        });
+
+        const bounds = features.reduce((result, feature) => ({
+          minX: Math.min(result.minX, feature.minX),
+          minY: Math.min(result.minY, feature.minY),
+          maxX: Math.max(result.maxX, feature.maxX),
+          maxY: Math.max(result.maxY, feature.maxY)
+        }), { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity });
+        const padding = 35;
+        provinceMap.setAttribute("viewBox", `${bounds.minX - padding} ${bounds.minY - padding} ${bounds.maxX - bounds.minX + padding * 2} ${bounds.maxY - bounds.minY + padding * 2}`);
+        provinceMap.replaceChildren();
+
+        for (const feature of features) {
+          const path = document.createElementNS(svgNamespace, "path");
+          const title = document.createElementNS(svgNamespace, "title");
+          path.classList.add("province-shape");
+          path.dataset.province = feature.name;
+          path.setAttribute("d", feature.pathData);
+          path.setAttribute("role", "checkbox");
+          path.setAttribute("tabindex", "0");
+          path.setAttribute("aria-checked", "false");
+          path.setAttribute("aria-label", feature.name === "Fryslân" ? "Friesland" : feature.name);
+          title.textContent = feature.name === "Fryslân" ? "Friesland" : feature.name;
+          path.append(title);
+          path.addEventListener("click", () => toggleProvince(feature.name, path));
+          path.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              toggleProvince(feature.name, path);
+            }
+          });
+          provinceMap.append(path);
+
+          const label = document.createElementNS(svgNamespace, "text");
+          label.classList.add("province-label");
+          label.setAttribute("x", feature.labelPosition[0]);
+          label.setAttribute("y", feature.labelPosition[1]);
+          label.setAttribute("text-anchor", "middle");
+          label.setAttribute("dominant-baseline", "middle");
+          const provinceLabel = { "Fryslân": "Friesland", "Noord-Holland": "N-Holland", "Zuid-Holland": "Z-Holland", "Noord-Brabant": "N-Brabant" }[feature.name] || feature.name;
+          label.textContent = provinceLabel;
+          provinceMap.append(label);
+        }
+
+        provinceMap.hidden = false;
+      }
+
+      function toggleProvince(name, element) {
+        if (mapSubmitButton.disabled) return;
+        if (selectedProvinces.has(name)) {
+          selectedProvinces.delete(name);
+          element.classList.remove("is-selected");
+          element.setAttribute("aria-checked", "false");
+          element.setAttribute("aria-pressed", "false");
+        } else {
+          selectedProvinces.add(name);
+          element.classList.add("is-selected");
+          element.setAttribute("aria-checked", "true");
+          element.setAttribute("aria-pressed", "true");
+        }
+        mapStatus.textContent = selectedProvinces.size
+          ? `Geselecteerd: ${[...selectedProvinces].map(name => name === "Fryslân" ? "Friesland" : name).join(", ")}`
+          : "Nog geen provincies geselecteerd.";
+      }
+
+      function clearProvinceSelections() {
+        selectedProvinces.clear();
+        provinceMap.querySelectorAll(".province-shape").forEach(element => {
+          element.classList.remove("is-selected", "is-correct", "is-incorrect");
+          element.setAttribute("aria-checked", "false");
+          element.setAttribute("aria-disabled", "false");
+        });
+        mapFallback.querySelectorAll("button").forEach(element => {
+          element.setAttribute("aria-pressed", "false");
+          element.disabled = false;
+        });
+        mapStatus.textContent = "Nog geen provincies geselecteerd.";
+      }
+
+      async function prepareProvinceQuestion() {
+        clearProvinceSelections();
+        mapSubmitButton.hidden = false;
+        mapSubmitButton.disabled = false;
+        mapLoading.hidden = false;
+        mapFallback.hidden = true;
+        provinceMap.hidden = true;
+
+        try {
+          if (!provinceMapPromise) {
+            provinceMapPromise = fetch(provinceDataUrl)
+              .then(response => {
+                if (!response.ok) throw new Error("Kaartgegevens niet beschikbaar");
+                return response.json();
+              })
+              .then(renderProvinceMap);
+          }
+          await provinceMapPromise;
+          mapLoading.hidden = true;
+          provinceMap.hidden = false;
+        } catch {
+          mapLoading.textContent = "De kaart kon niet worden geladen. Kies de provincies hieronder.";
+          mapFallback.replaceChildren();
+          for (const name of provinceNames) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "province-fallback-option";
+            button.textContent = name === "Fryslân" ? "Friesland" : name;
+            button.setAttribute("aria-pressed", "false");
+            button.addEventListener("click", () => toggleProvince(name, button));
+            mapFallback.append(button);
+          }
+          mapLoading.hidden = false;
+          mapFallback.hidden = false;
+        }
+      }
+
+      function submitProvinceAnswer() {
+        if (selectedProvinces.size === 0) {
+          mapStatus.textContent = "Selecteer eerst de provincies op de kaart.";
+          return;
+        }
+        const isCorrect = selectedProvinces.size === correctProvinces.size && [...correctProvinces].every(name => selectedProvinces.has(name));
+        provinceMap.querySelectorAll(".province-shape").forEach(element => {
+          const isExpected = correctProvinces.has(element.dataset.province);
+          element.setAttribute("aria-disabled", "true");
+          if (isExpected) element.classList.add("is-correct");
+          else if (selectedProvinces.has(element.dataset.province)) element.classList.add("is-incorrect");
+        });
+        mapFallback.querySelectorAll("button").forEach(button => { button.disabled = true; });
+        mapSubmitButton.disabled = true;
+        mapSubmitButton.hidden = true;
+        completeQuestion(isCorrect, isCorrect
+          ? "Goed! Zeeland en Friesland."
+          : "De juiste provincies zijn Zeeland en Friesland.");
+      }
+
+      function showResults() {
+        questionScreen.hidden = true;
+        resultScreen.hidden = false;
+        const passed = correctCount >= minimumCorrect;
+        document.getElementById("result-title").textContent = passed ? "Je hebt het gehaald!" : "Bijna gewonnen!";
+        document.getElementById("result-copy").textContent = passed
+          ? `Je had ${correctCount} van de ${questions.length} vragen goed. Tijd om je cadeau te ontdekken.`
+          : `Je had ${correctCount} van de ${questions.length} vragen goed. Je hebt er minimaal ${minimumCorrect} nodig. Probeer het nog eens!`;
+        document.getElementById("gift-reveal").hidden = !passed;
+      }
+
+      textAnswerForm.addEventListener("submit", event => {
+        event.preventDefault();
+        if (!favoriteMoment.value.trim()) {
+          feedback.textContent = "Schrijf eerst een moment op om verder te gaan.";
+          favoriteMoment.focus();
+          return;
+        }
+        favoriteMoment.disabled = true;
+        textAnswerForm.querySelector("button").disabled = true;
+        completeQuestion(true, "Antwoord opgeslagen.");
+      });
+
+      mapSubmitButton.addEventListener("click", submitProvinceAnswer);
+
+      document.getElementById("start-button").addEventListener("click", () => {
+        introScreen.hidden = true;
+        questionScreen.hidden = false;
+        showQuestion();
+      });
+
+      nextButton.addEventListener("click", () => {
+        if (questionIndex === questions.length - 1) {
+          showResults();
+          return;
+        }
+        questionIndex += 1;
+        showQuestion();
+      });
+
+      document.getElementById("retry-button").addEventListener("click", () => {
+        questionIndex = 0;
+        correctCount = 0;
+        resultScreen.hidden = true;
+        questionScreen.hidden = false;
+        showQuestion();
+      });
+    </script>
+  </body>
+</html>
